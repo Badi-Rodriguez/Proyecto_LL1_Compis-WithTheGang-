@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>LR(1)</title>
+</head>
+
+<body>
+    <h1>LR(1) Parser</h1>
+    <form method="post" action="/">
+        <h3>Grammar</h3>
+        <textarea name="grammar" rows="8" cols="60">{{ grammar or '' }}</textarea><br>
+        <h3>Input</h3>
+        <input type="text" name="input" value="{{ input or '' }}" style="width:300px">
+        <br><br>
+        <button type="submit">Parse</button>
+    </form>
+
+    {% if result %}
+    <h3>Result:</h3>
+    <pre>{{ result }}</pre>
+    {% endif %}
+</body>
+
+</html>
