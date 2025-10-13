@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template
-from lark import Lark, UnexpectedInput
-from src.utils import grammar_to_lark
+from src.scanner import Grammar
+from src.parser import LR1
 
 app = Flask(__name__)
 
@@ -12,14 +12,9 @@ def index():
 
     if request.method == 'POST':
         try:
-            start_symbol, lark_grammar = grammar_to_lark(grammar)
-            l = Lark(lark_grammar, start=start_symbol)
-
-            tree = l.parse(input)
-            result = tree.pretty()
+            g = Grammar(grammar)
+            print([t.value for t in g.get_terminals()], [t.value for t in g.get_non_terminals()])
             
-        except UnexpectedInput as e:
-            result = f"Parse error: {str(e)}"
         except Exception as e:
             result = f"Error: {str(e)}"
 
