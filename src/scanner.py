@@ -21,16 +21,20 @@ class Symbol:
             return '"ε"'
         return f'"{self.value}"' if self.type == SymbolType.TERMINAL else self.value
 
+class Production:
+    def __init__(self, symbols: List[Symbol]):
+        self.symbols = symbols
+
 class GrammarRule:
     def __init__(self, start_symbol: Symbol):
         self.start_symbol: Symbol = start_symbol
-        self.productions: List[List[Symbol]] = []
+        self.productions: List[Production] = []
     
-    def add_prod(self, prod: List[Symbol]):
+    def add_prod(self, prod: Production):
         self.productions.append(prod)
 
     def __repr__(self):
-        prods_str = " | ".join(" ".join(map(str, p)) for p in self.productions)
+        prods_str = " | ".join(" ".join(map(str, p.symbols)) for p in self.productions)
         return f"{self.start_symbol} -> {prods_str}"
 
 class Grammar:
@@ -63,7 +67,7 @@ class Grammar:
                     else:
                         symbols.append(Symbol(token, SymbolType.NON_TERMINAL))
 
-                rule.add_prod(symbols)
+                rule.add_prod(Production(symbols))
     
     def find_or_create_rule(self, start_symbol: Symbol):
         for rule in self.rules:
@@ -115,7 +119,7 @@ class Grammar:
         
         for prod in prods:
             add_epsilon = True
-            for sym in prod:
+            for sym in prod.symbols:
                 sym_first = self.first(sym, visited)
 
                 for s in sym_first:
