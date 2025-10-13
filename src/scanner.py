@@ -95,19 +95,29 @@ class Grammar:
     def get_non_terminals(self):
         return { s for s in self.get_all_symbols() if s.type == SymbolType.NON_TERMINAL }
 
-    def first(self, symbol: Symbol):
+    def first(self, symbol: Symbol, visited = None):
+        if visited is None:
+            visited = set()
+
+        if symbol in visited:
+            return set()
+
         if symbol.type == SymbolType.TERMINAL or symbol.value == '':
             return { symbol }
         
+        visited.add(symbol)
         first_symbols = set()
         prods = self.get_prods(symbol)
+
         if not prods:
+            visited.remove(symbol)
             return { Symbol('', SymbolType.TERMINAL) }
         
         for prod in prods:
             add_epsilon = True
             for sym in prod:
-                sym_first = self.first(sym)
+                sym_first = self.first(sym, visited)
+
                 for s in sym_first:
                     if s.value != '':
                         first_symbols.add(s)
@@ -119,9 +129,10 @@ class Grammar:
             if add_epsilon:
                 first_symbols.add(Symbol('', SymbolType.TERMINAL))
 
+        visited.remove(symbol)
         return first_symbols
     
-    def follow(self):
+    def follow(self, symbol: Symbol):
         return
 
     def __repr__(self):
