@@ -15,6 +15,11 @@ class Symbol:
 
     def __hash__(self):
         return hash((self.value, self.type))
+    
+    def __repr__(self):
+        if self.value == '':
+            return '"ε"'
+        return f'"{self.value}"' if self.type == SymbolType.TERMINAL else self.value
 
 class GrammarRule:
     def __init__(self, start_symbol: Symbol):
@@ -23,6 +28,10 @@ class GrammarRule:
     
     def add_prod(self, prod: List[Symbol]):
         self.productions.append(prod)
+
+    def __repr__(self):
+        prods_str = " | ".join(" ".join(map(str, p)) for p in self.productions)
+        return f"{self.start_symbol} -> {prods_str}"
 
 class Grammar:
     def __init__(self, string: str):
@@ -86,8 +95,29 @@ class Grammar:
     def get_non_terminals(self):
         return { s for s in self.get_all_symbols() if s.type == SymbolType.NON_TERMINAL }
 
-    def first(self):
-        return
+    def first(self, symbol: Symbol):
+        if symbol.type == SymbolType.TERMINAL:
+            return symbol
+        
+        first_symbols: List[Symbol] = []
+        prods = self.get_prods(symbol)
+        for prod in prods:
+            if prod[0].value != '':
+                first_symbols.append(self.first(prod[0]))
+                break
+
+            for sym in prod:
+                if sym.value == '':
+                    continue
+                else:
+                    first_symbols.append(self.first(sym))
+                    break
+            first_symbols.append(Symbol('', SymbolType.TERMINAL))
+
+        return first_symbols
     
     def follow(self):
         return
+
+    def __repr__(self):
+        return "\n".join(str(rule) for rule in self.rules)
