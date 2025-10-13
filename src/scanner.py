@@ -96,23 +96,28 @@ class Grammar:
         return { s for s in self.get_all_symbols() if s.type == SymbolType.NON_TERMINAL }
 
     def first(self, symbol: Symbol):
-        if symbol.type == SymbolType.TERMINAL:
-            return symbol
+        if symbol.type == SymbolType.TERMINAL or symbol.value == '':
+            return { symbol }
         
-        first_symbols: List[Symbol] = []
+        first_symbols = set()
         prods = self.get_prods(symbol)
+        if not prods:
+            return { Symbol('', SymbolType.TERMINAL) }
+        
         for prod in prods:
-            if prod[0].value != '':
-                first_symbols.append(self.first(prod[0]))
-                break
-
+            add_epsilon = True
             for sym in prod:
-                if sym.value == '':
-                    continue
-                else:
-                    first_symbols.append(self.first(sym))
+                sym_first = self.first(sym)
+                for s in sym_first:
+                    if s.value != '':
+                        first_symbols.add(s)
+
+                if all(s.value != '' for s in sym_first):
+                    add_epsilon = False
                     break
-            first_symbols.append(Symbol('', SymbolType.TERMINAL))
+
+            if add_epsilon:
+                first_symbols.add(Symbol('', SymbolType.TERMINAL))
 
         return first_symbols
     
