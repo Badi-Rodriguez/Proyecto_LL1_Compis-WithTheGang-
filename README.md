@@ -89,8 +89,6 @@ src/
 
 MIT (sugerida). Agrega un archivo `LICENSE` si el curso lo requiere.
 
-````
-
 ---
 
 # LR(1) Parser Service — Technical Report
