@@ -93,7 +93,6 @@ MIT (sugerida). Agrega un archivo `LICENSE` si el curso lo requiere.
 
 ---
 
-```md
 # LR(1) Parser Service — Technical Report
 
 ## 1. Resumen
