@@ -1,13 +1,5 @@
 # LR(1) Parser for CS3025 @ UTEC
 
-¡Hecho! Te dejo ambas piezas listas para pegar. Mantengo el **título en inglés** y todo lo demás en español.
-
----
-
-# LR(1) Parser Service — CS3025 @ UTEC
-
-Un servicio web pequeño que recibe una gramática libre de contexto y una cadena de entrada, construye el autómata y la tabla de parseo estilo LR, y devuelve un JSON completo: metadatos de la gramática (incluyendo conjuntos FIRST), estados del DFA, tabla de parseo y resultado del parseo.
-
 > **Pipeline (un solo endpoint):** Grammar → NFA → DFA → Parsing Table → Parse  
 > Implementado en `POST /analyze`. Retorna `{ grammar, dfa, parsing_table, parse_result }`.
 
