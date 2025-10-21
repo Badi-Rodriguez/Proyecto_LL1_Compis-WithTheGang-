@@ -15,16 +15,16 @@
 **POST** `/analyze`
 
 **Request (JSON)**
-\`\`\`json
+```json
 {
   "grammar": "E -> E + T | T\nT -> T * F | F\nF -> ( E ) | id",
   "input": "id + id * id"
 }
-\`\`\``
+````
 
 **Response (forma general)**
 
-\`\`\`json
+```json
 {
   "grammar": {
     "start_symbol": "S'",
@@ -37,11 +37,11 @@
   "parsing_table": { "...": "..." },
   "parse_result": { "accepted": true, "trace": ["..."] }
 }
-\`\`\`
+```
 
 ## Quickstart
 
-\`\`\`bash
+```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install flask flask-cors
@@ -53,17 +53,17 @@ python app.py  # o: python -m flask --app app run -p 5002
 curl -X POST http://127.0.0.1:5002/analyze \
   -H 'Content-Type: application/json' \
   -d '{"grammar":"E -> E + T | T\nT -> T * F | F\nF -> ( E ) | id", "input":"id + id * id"}'
-\`\`\`
+```
 
 ## Estructura del proyecto
 
-\`\`\`
+```
 app.py               # POST /analyze: orquesta todo el pipeline
 src/
   grammar.py         # Carga de gramática + FIRST, FIRST(sequence), to_json
   closure_table.py   # NFABuilder, DFABuilder (closure/goto de items)
   parser.py          # Construcción de tabla + parse()
-\`\`\`
+```
 
 ## Notas
 
@@ -111,23 +111,23 @@ El servicio expone un único endpoint HTTP que recibe una gramática (CFG) y una
 ### Contrato de datos
 
 **Request**
-\`\`\`json
+```json
 {
   "grammar": "A -> a A | ε\nS -> A",
   "input": "a a a"
 }
-\`\`\``
+````
 
 **Response**
 
-\`\`\`json
+```json
 {
   "grammar": { "...": "campos descritos arriba" },
   "dfa": [{ "...": "codificación de estados" }],
   "parsing_table": { "...": "ACTION/GOTO o equivalente" },
   "parse_result": { "accepted": true, "trace": ["..."] }
 }
-\`\`\`
+```
 
 **Campos del JSON de gramática**
 
@@ -152,3 +152,4 @@ Sean `|G|` el total de símbolos/producciones y `|I|` el número de conjuntos de
 * Golden tests para gramáticas pequeñas (paréntesis balanceados, aritmética simple).
 * Verificación de determinismo del DFA (sin estados duplicados).
 * Sanidad de tabla: detectar y reportar conflictos (shift/reduce, reduce/reduce).
+
